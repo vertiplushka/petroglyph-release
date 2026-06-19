@@ -1,0 +1,145 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PlaceType {
+  attraction
+  hotel
+  restaurant
+  museum
+}
+
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
+model Place {
+  id          Int       @id
+  name        String
+  category    String
+  description String    @db.Text
+  price       String
+  rating      Float
+  tags        Json
+  image       String    @db.Text
+  images      Json      @default("[]")
+  lat         Float
+  lng         Float
+  type        PlaceType @default(attraction)
+  phone       String?
+  website     String?
+  address     String?
+  partnerId   Int?
+  partner     Partner?  @relation(fields: [partnerId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Route {
+  id          Int      @id
+  title       String
+  subtitle    String   @db.Text
+  path        String
+  description String   @db.Text
+  tags        Json
+  image       String   @db.Text
+  images      Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Settings {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id        Int          @id @default(autoincrement())
+  author    String
+  date      String
+  rating    Int
+  text      String       @db.Text
+  status    ReviewStatus @default(pending)
+  placeId   Int?
+  routeId   Int?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Partner {
+  id                 Int       @id @default(autoincrement())
+  companyName        String
+  legalAddress       String    @db.Text
+  inn                String
+  kpp                String
+  ogrn               String
+  contactPerson      String
+  phone              String
+  email              String    @unique
+  passwordHash       String
+  subscriptionActive Boolean   @default(false)
+  subscriptionEndsAt DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  places             Place[]
+}
+
+model AnalyticsEvent {
+  id        Int      @id @default(autoincrement())
+  placeId   Int
+  eventType String
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  placeId   Int
+  name      String
+  phone     String
+  email     String?
+  message   String?  @db.Text
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PlaceRequest {
+  id        Int      @id @default(autoincrement())
+  placeId   Int
+  name      String
+  phone     String
+  email     String?
+  message   String?  @db.Text
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  name         String?
+  email        String?    @unique
+  phone        String?    @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  favorites    Favorite[]
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routeId   Int?
+  placeIds  Json?
+  title     String
+  createdAt DateTime @default(now())
+}

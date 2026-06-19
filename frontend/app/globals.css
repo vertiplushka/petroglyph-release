@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-roboto: var(--font-roboto), system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, serif;
+
+  --color-brand: #233516;
+  --color-brand-dark: #1a2811;
+  --color-surface: #fffcf3;
+  --color-card: #fffdf8;
+  --color-ink: #0e0f11;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animated route line */
+.animated-route {
+  stroke-dasharray: 10 7;
+  animation: route-flow 0.8s linear infinite;
+}
+
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -17;
+  }
+}
+
+/* Leaflet tooltip override */
+.leaflet-tooltip {
+  background: #233516 !important;
+  color: #fffcf3 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-family: var(--font-sans) !important;
+  padding: 3px 8px !important;
+  box-shadow: 0 2px 8px rgba(35,53,22,0.25) !important;
+  white-space: nowrap !important;
+}
+.leaflet-tooltip::before {
+  border-top-color: #233516 !important;
+}
+
+body {
+  background-color: #fffcf3;
+  color: #0e0f11;
+  font-family: var(--font-sans);
+}

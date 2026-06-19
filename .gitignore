@@ -1,0 +1,24 @@
+# Environment
+.env
+.env*.local
+
+# OS
+.DS_Store
+*.pem
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker volumes / data
+mysql_data/
+certbot/certs/
+
+# Editor
+.vscode/
+.idea/
+
+# Claude
+start-claude.sh
+CLAUDE.md
